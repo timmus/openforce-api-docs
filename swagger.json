@@ -1,0 +1,379 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "Settlement API"
+  },
+  "paths": {
+    "/contractor-guids": {
+      "get": {
+        "tags": [
+          "ContractorGuids"
+        ],
+        "summary": "Request a specific Contractor",
+        "operationId": "Contractor-guidsGet",
+        "consumes": [],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "LastName",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "DateOfBirth",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "GovernmentId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "CountryCode",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested Contractor",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "The parameter(s) provided are invalid"
+          },
+          "404": {
+            "description": "The requested data is not found"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ContractorGuids"
+        ],
+        "summary": "Create a Contractor",
+        "operationId": "Contractor-guidsPost",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "contractorGuidInDto",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ContractorGuidInDto"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Returns the created Contractor Guid",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "The request is malformed"
+          },
+          "422": {
+            "description": "Entity Validation has failed",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/contractors": {
+      "get": {
+        "tags": [
+          "Contractors"
+        ],
+        "summary": "Request a list of Contractors",
+        "operationId": "ContractorsGet",
+        "consumes": [],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "top",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested Contractors",
+            "schema": {
+              "$ref": "#/definitions/ContractorOutDto"
+            }
+          },
+          "400": {
+            "description": "The query is malformed",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/contractors/{id}": {
+      "get": {
+        "tags": [
+          "Contractors"
+        ],
+        "summary": "Request a specific Contractor",
+        "operationId": "ContractorsByIdGet",
+        "consumes": [],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested Contractor",
+            "schema": {
+              "$ref": "#/definitions/ContractorOutDto"
+            }
+          },
+          "400": {
+            "description": "The parameter(s) provided are invalid"
+          },
+          "404": {
+            "description": "The requested data is not found"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/contractors/{id}/ic_ids": {
+      "get": {
+        "tags": [
+          "Contractors"
+        ],
+        "summary": "Request a specific Contractor",
+        "operationId": "ContractorsByIdIc_idsGet",
+        "consumes": [],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested Contractor",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "The parameter(s) provided are invalid"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/contractors/{id}/rollup_ids": {
+      "get": {
+        "tags": [
+          "Contractors"
+        ],
+        "summary": "Request a specific Rollup",
+        "operationId": "ContractorsByIdRollup_idsGet",
+        "consumes": [],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the requested Rollup",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "400": {
+            "description": "The parameter(s) provided are invalid"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ContractorGuidInDto": {
+      "required": [
+        "last_name",
+        "date_of_birth",
+        "government_id",
+        "country_code"
+      ],
+      "type": "object",
+      "properties": {
+        "last_name": {
+          "maxLength": 100,
+          "minLength": 2,
+          "type": "string"
+        },
+        "date_of_birth": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "government_id": {
+          "maxLength": 9,
+          "minLength": 9,
+          "pattern": "^[0-9]+$",
+          "type": "string"
+        },
+        "country_code": {
+          "maxLength": 3,
+          "minLength": 3,
+          "type": "string"
+        }
+      }
+    },
+    "ContractorOutDto": {
+      "required": [
+        "company_name",
+        "first_name",
+        "last_name",
+        "middle_name",
+        "email",
+        "date_of_birth",
+        "contracted_on",
+        "address1",
+        "city",
+        "state",
+        "country",
+        "postal_code"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "external_id": {
+          "type": "string"
+        },
+        "of_id": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "company_name": {
+          "type": "string"
+        },
+        "first_name": {
+          "type": "string"
+        },
+        "last_name": {
+          "type": "string"
+        },
+        "middle_name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "date_of_birth": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "contracted_on": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "address1": {
+          "type": "string"
+        },
+        "address2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "postal_code": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
