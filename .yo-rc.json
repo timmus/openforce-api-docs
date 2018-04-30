@@ -3,7 +3,7 @@
     "importExistingSpec": true,
     "importedSpec": "E:\\Projects\\openforce-api-docs\\swagger.yaml",
     "name": "Openforce",
-    "repo": "timmus/openforce-api-docs",
+    "repo": "oforce/openforce-api-docs",
     "splitSpec": false,
     "samples": true,
     "installSwaggerUI": true
