@@ -1,7 +1,7 @@
 {
   "generator-openapi-repo": {
     "importExistingSpec": true,
-    "importedSpec": "E:\\Projects\\openforce-api-docs\\swagger.yaml",
+    "importedSpec": "/Users/tim/Projects/openforce-api-docs/swagger.json",
     "name": "Openforce",
     "repo": "oforce/openforce-api-docs",
     "splitSpec": false,
