@@ -1,13 +1,60 @@
 swagger: '2.0'
 info:
   version: v1
-  title: Settlement API
+  title: Openforce API
+  description: >
+    # Introduction
+
+    The Openforce Contractor API provides IC profile information for data syncs with the contracting company, partner and vendor systems. 
+    
+    
+    For contracting companies, this can create an ideal solution to sync the latest IC data into dispatch or CRM systems to help reduce risk on overrides. When pulling directly from the data source, contracting companies have peace of mind knowing that they’re working with the most up-to-date information from the Openforce platform. 
+    
+    
+    Benefits are hardly limited to contracting companies. Instant access and sharing of IC profile information for insurance partners, background screening providers and member benefits partners, adds tremendous benefits such as enhanced user experience and helps remove friction throughout the entire IC management lifecycle.
+
+
+    # Authentication
+
+    The Openforce API uses an OAuth2 authentication scheme. The Client Credentials Grant is the only supported oAuth2 Flow. Requests to the API must be authenticated using a bearer token in the Authorization header.
+
+
+    Applications will obtain bearer tokens via the token endpoint: https://oforce.auth.us-west-2.amazoncognito.com/oauth2/token
+
+
+    When making a request to the token endpoint, the basic auth credentials must be a base64 encoded string in the format client_id:client_secret. These credentials can be obtained through Openforce.
+
+
+    Example request:
+      ```
+      POST https://oforce.auth.us-west-2.amazoncognito.com/oauth2/token
+        Content-Type='application/x-www-form-urlencoded'&
+        Authorization=Basic [base64 encoded credentials]
+        grant_type=client_credentials&
+        scope=https://api.oforce.com/api
+      ```
+
+
+    Example of a successful authentication response:
+      ```
+      HTTP/1.1 200 OK
+        Content-Type: application/json
+        {
+         "access_token": "eyJz9sdfsdfsdfsd",
+         "token_type": "Bearer",
+         "expires_in": 3600
+        }
+      ```
+
+
+    Additional information can be found [here](https://docs.aws.amazon.com/cognito/latest/developerguide/token-endpoint.html).
+
 paths:
   /contractor-guids:
     get:
       tags:
         - ContractorGuids
-      summary: Request a specific Contractor
+      summary: Request a Contractor Id
       operationId: Contractor-guidsGet
       consumes: []
       produces:
@@ -39,39 +86,6 @@ paths:
           description: The parameter(s) provided are invalid
         '404':
           description: The requested data is not found
-        '500':
-          description: Server Error
-    post:
-      tags:
-        - ContractorGuids
-      summary: Create a Contractor
-      operationId: Contractor-guidsPost
-      consumes:
-        - application/json-patch+json
-        - application/json
-        - text/json
-        - application/*+json
-      produces:
-        - application/json
-      parameters:
-        - name: contractorGuidInDto
-          in: body
-          required: false
-          schema:
-            $ref: '#/definitions/ContractorGuidInDto'
-      responses:
-        '201':
-          description: Returns the created Contractor Guid
-          schema:
-            type: string
-        '400':
-          description: The request is malformed
-        '422':
-          description: Entity Validation has failed
-          schema:
-            type: object
-            additionalProperties:
-              type: string
         '500':
           description: Server Error
   /contractors:
@@ -133,12 +147,12 @@ paths:
           description: The requested data is not found
         '500':
           description: Server Error
-  '/contractors/{id}/ic_ids':
+  '/contractors/{id}/disbursements':
     get:
       tags:
-        - Contractors
-      summary: Request a specific Contractor
-      operationId: ContractorsByIdIc_idsGet
+        - Disbursements
+      summary: Request a list of Disbursements for a Contractor
+      operationId: ContractorsByIdDisbursementsGet
       consumes: []
       produces:
         - application/json
@@ -150,62 +164,18 @@ paths:
           format: uuid
       responses:
         '200':
-          description: Returns the requested Contractor
+          description: Returns the requested Disbursements
           schema:
-            type: string
+            $ref: '#/definitions/DisbursementOutDto'
         '400':
-          description: The parameter(s) provided are invalid
-        '500':
-          description: Server Error
-  '/contractors/{id}/rollup_ids':
-    get:
-      tags:
-        - Contractors
-      summary: Request a specific Rollup
-      operationId: ContractorsByIdRollup_idsGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: id
-          in: path
-          required: true
-          type: string
-          format: uuid
-      responses:
-        '200':
-          description: Returns the requested Rollup
+          description: The request is malformed
           schema:
-            type: string
-        '400':
-          description: The parameter(s) provided are invalid
+            type: object
+            additionalProperties:
+              type: string
         '500':
-          description: Server Error
+          description: An internal server error was encountered
 definitions:
-  ContractorGuidInDto:
-    required:
-      - last_name
-      - date_of_birth
-      - government_id
-      - country_code
-    type: object
-    properties:
-      last_name:
-        maxLength: 100
-        minLength: 2
-        type: string
-      date_of_birth:
-        format: date-time
-        type: string
-      government_id:
-        maxLength: 9
-        minLength: 9
-        pattern: '^[0-9]+$'
-        type: string
-      country_code:
-        maxLength: 3
-        minLength: 3
-        type: string
   ContractorOutDto:
     required:
       - company_name
@@ -258,3 +228,29 @@ definitions:
         type: string
       postal_code:
         type: string
+  DisbursementOutDto:
+    type: object
+    properties:
+      id:
+        format: int32
+        type: integer
+      disbursed_on:
+        format: date-time
+        type: string
+      gross_amount:
+        format: double
+        type: number
+      net_amount:
+        format: double
+        type: number
+      contractor_id:
+        format: uuid
+        type: string
+      contracting_company_id:
+        format: int32
+        type: integer
+      of_id:
+        format: int32
+        type: integer
+
+
